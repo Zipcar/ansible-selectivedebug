@@ -23,22 +23,20 @@ DOCUMENTATION = '''
     callback_type: stdout
     requirements:
       - set as stdout_callback
-    short_description: Ansible screen output that combines the powers of the plugins 'debug', 'skippy', and 'selective'
+    short_description: Ansible screen output that combines the powers of the plugins 'debug' and 'selective'
     extends_documentation_fragment:
       - default_callback
     description:
         - This callback outputs stdout/stderr in a more "raw" format that makes it easier to read
         - It only does this for tasks that have failed or that have been tagged with `always_log`
-        - It also skips output entirely for tasks that are skipped
+        - Output for skipped tasks can be suppressed with the `display_skipped_hosts` option
 '''
 
 from ansible.plugins.callback.debug import CallbackModule as DebugCallback
-from ansible.plugins.callback.skippy import CallbackModule as SkippyCallback
 
-class CallbackModule(DebugCallback, SkippyCallback):
+class CallbackModule(DebugCallback):
     '''
-    Inherit from the 'debug' module to get its nice stdout/stderr output,
-    and inherit from the 'skippy' module to not output skipped tasks.
+    Inherit from the 'debug' module to get its nice stdout/stderr output.
 
     Add in a basic (hacky) version of the functionality of selective.
     '''
