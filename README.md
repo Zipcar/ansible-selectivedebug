@@ -1,11 +1,13 @@
 # Selective Debug
 
-**selectivedebug** is an Ansible Output Callback Plugin that combines the powers of the plugins [`selective`](http://docs.ansible.com/ansible/devel/plugins/callback/selective.html), [`debug`](http://docs.ansible.com/ansible/devel/plugins/callback/debug.html), and [`skippy`](http://docs.ansible.com/ansible/devel/plugins/callback/skippy.html).
+**selectivedebug** is an Ansible Output Callback Plugin that combines the powers of the plugins [`selective`](https://docs.ansible.com/ansible/latest/plugins/callback/selective.html) and [`debug`](https://docs.ansible.com/ansible/latest/plugins/callback/debug.html). It is useful if you want to see readable multi-line output from some (but not all) successful tasks.
+
+**NB:** A previous version of this plugin also didn't display output for skipped tasks, like the [`skippy`](https://docs.ansible.com/ansible/latest/plugins/callback/skippy.html) plugin. This functionality is now optional and is no longer the default behaviour. If you are upgrading from an older version, see the Usage section below on how to configure `display_skipped_hosts` if you want to preserve this behaviour.
 
 ## Features
 
 * Output stdout/stderr as raw output, not wrapped in quotes or json (exactly like `debug` does)
-* Don't output jobs that are skipped at all (exactly like `skippy`)
+* Optionally don't display output for jobs that are skipped (in the same way `default` and `debug` support)
 * Optionally output stdout/stderr from tasks that succeeded, on task-by-task basis (not exactly like `selective`)
 
 ## Usage
@@ -21,8 +23,13 @@ To output stdout/stderr for a task even if it succeeds, add the `always_log` tag
 ```yaml
 - name: a task whose output we always want to log
   script: foobar.sh
-  tags:
-    - always_log
+  tags: [always_log]
+```
+
+To show no output for tasks that are skipped, add this to your `ansible.cfg`:
+
+```ini
+display_skipped_hosts = no
 ```
 
 ## Example output
